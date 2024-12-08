@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script 
+    type="module" 
+    src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+    <title>WEB AR</title>
+</head>
+<body>
+    <!-- 3D Model Viewer -->
+    <model-viewer 
+    id="model-viewer"
+    src="models/chair.glb" 
+    style="width: 100vw; height: 90vh;"
+    shadow-intensity="1" 
+    camera-controls 
+    touch-action="pan-y"
+    ar
+    scale="0.1 0.1 0.1"
+    >
+    <!-- AR Button -->
+    <button id="ar-button" slot="ar-button">Start AR</button>
+</model-viewer>
+
+    <script>
+        const arButton = document.getElementById('ar-button');
+        const modelViewer = document.getElementById('model-viewer');
+
+        // Check AR compatibility
+        if (!modelViewer.canActivateAR) {
+            alert("AR is not supported on this device or browser.");
+            arButton.style.display = 'none';
+        }
+
+        // Handle AR activation
+        arButton.addEventListener('click', async () => {
+            try {
+                // Request camera permissions
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                if (stream) {
+                    console.log("Camera accessed successfully.");
+                    modelViewer.activateAR();
+                } else {
+                    console.error("Unable to access camera.");
+                }
+            } catch (error) {
+                console.error("Error accessing camera:", error);
+                alert("Camera access is required for AR.");
+            }
+        });
+    </script>
+
+    <!-- Styling -->
+    <style>
+        #ar-button {
+            width: 120px;
+            height: 60px;
+            position: absolute;
+            right: 35px;
+            bottom: 35px;
+            background-color: rgb(52, 87, 87);
+            color: white;
+            border: none;
+            font-size: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #ar-button:hover {
+            background-color: rgb(30, 60, 60);
+        }
+    </style>
+</body>
+</html>
